@@ -1,32 +1,45 @@
 package com.overlay;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.Window;
 
 
 public class TestApp extends Application{
     @Override
     public void start(Stage primaryStage) {
 
-        Pane root = new Pane();
-        primaryStage.setTitle("Hello World");
+        BorderPane root = new BorderPane();
+        primaryStage.setTitle("Overlay");
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setFullScreen(true);
         primaryStage.setFullScreenExitHint("");
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
 
-        Button test = new Button("yes");
-        root.getChildren().add(test);
+
+        Button topL = new Button("TopL");
+        root.setTop(topL);
+        root.setAlignment(topL, Pos.TOP_LEFT);
+        root.setMargin(topL, new Insets(20, 20, 20, 20));
+
+        Button left = new Button("Left");
+        root.setCenter(left);
+        root.setAlignment(left, Pos.CENTER_LEFT);
+        root.setMargin(left, new Insets(20, 20, 20, 20));
+
+        Button bottomL = new Button("BottomL");
+        root.setBottom(bottomL);
+        root.setAlignment(bottomL, Pos.BOTTOM_LEFT);
+        root.setMargin(bottomL, new Insets(20, 20, 20, 20));
 
         primaryStage.setOpacity(0.5);
         Scene primaryScene = new Scene(root);
