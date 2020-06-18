@@ -1,58 +1,81 @@
 package com.overlay.engine.graphic;
 
 import javafx.geometry.Point2D;
-import javafx.scene.layout.AnchorPane;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 
-public class ImageContainer implements DrawableObject {
+public class ImageContainer extends PositionableObject {
 
-    AnchorPane container;
+    ImageView imageView;
+    ImageManager imageManager;
+    Node clip;
 
-    void ImageContainer(){
-        container = new AnchorPane();
+    public ImageContainer(Point2D anchor, double width, double height, ImageManager imageManager) {
+        super(anchor, width, height);
+        this.imageManager = imageManager;
+        imageView = new ImageView();
+    }
+
+    public ImageContainer(Point2D anchor, double width, double height, String imageName) {
+        super(anchor, width, height);
+        this.imageManager = new ImageManager(width, height, imageName);
+        imageView = new ImageView();
     }
 
     @Override
-    public void load() {
-
+    public boolean load() {
+        if(!super.load()) return false;
+        if (imageManager.getWidth() > width ) imageManager.setWidth(width);
+        if (imageManager.getHeight() > height ) imageManager.setHeight(height);
+        if (!imageManager.load()) return false;
+        imageView.setImage(imageManager.getImage());
+        imageView.setX(baseAnchor.getX());
+        imageView.setY(baseAnchor.getY());
+        imageView.setClip(clip);
+        loaded = true;
+        return true;
     }
 
-    @Override
-    public void setSize(double width, double height) {
-
-    }
-
-    @Override
-    public double getWidth() {
-        return 0;
-    }
-
-    @Override
-    public void setWidth(double width) {
-
-    }
-
-    @Override
-    public double getHeight() {
-        return 0;
-    }
-
-    @Override
-    public void setHeight(double height) {
-
-    }
 
     @Override
     public boolean isReadyToDraw() {
-        return false;
+        if(!super.isReadyToDraw()) return false;
+        if(!imageManager.isReadyToDraw()) return false;
+        return true;
     }
 
     @Override
-    public Point2D getPoint() {
-        return null;
+    public Node getNode() {
+        return imageView;
     }
 
-    @Override
-    public void setPoint(double x, double y) {
+    public ImageManager getImageManager(){
+        return imageManager;
+    }
 
+    public void setClip(Node clip) {
+        this.clip = clip;
+    }
+
+    public Node getClip() {
+        return clip;
+    }
+
+    //TODO set another pos
+    public void setClipPosition(Pos pos){
+        switch (pos){
+            case CENTER:
+                clip.setLayoutX(imageManager.getWidth()/2);
+                clip.setLayoutY(imageManager.getHeight()/2);
+                break;
+            case TOP_LEFT:
+                clip.setLayoutX(0);
+                clip.setLayoutY(0);
+                break;
+            case BOTTOM_LEFT:
+                clip.setLayoutX(0);
+                clip.setLayoutY(imageManager.getHeight());
+        }
     }
 }

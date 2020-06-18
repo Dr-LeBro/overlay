@@ -1,26 +1,55 @@
 package com.overlay.engine.graphic;
 
+import javafx.scene.Node;
 
-import javafx.geometry.Point2D;
+public abstract class DrawableObject {
 
-public interface DrawableObject {
+    protected double width;
+    protected double height;
+    protected boolean loaded = false;
 
-    void load();
+    public DrawableObject(double width, double height){
+        this.width = width;
+        this.height = height;
+    }
 
-    void setSize(double width, double height);
+    public boolean load() {
+        if (width<=0) return false;
+        if (height<=0) return false;
+        return true;
+    }
 
-    double getWidth();
+    public boolean isLoaded() {
+        return loaded;
+    }
 
-    void setWidth(double width);
+    public void setSize(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
 
-    double getHeight();
+    public double getWidth() {
+        return width;
+    }
 
-    void setHeight(double height);
+    public void setWidth(double width){
+            this.width = width;
+    }
+    public double getHeight() {
+        return height;
+    }
 
-    boolean isReadyToDraw();
+    public void setHeight(double height){
+            this.height = height;
+    }
 
-    Point2D getPoint();
+    public boolean isReadyToDraw() {
+        if(width <= 0) return false;
+        if(height <= 0) return false;
+        return true;
+    }
 
-    void setPoint(double x, double y);
+    public Node getNode(){
+        return null;
+    }
 }
-

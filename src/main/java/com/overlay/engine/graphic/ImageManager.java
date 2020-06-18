@@ -2,59 +2,73 @@ package com.overlay.engine.graphic;
 
 import javafx.scene.image.Image;
 
+
 import java.io.File;
 
-public class ImageManager {
+public class ImageManager extends DrawableObject{
+
     private Image image;
-    private String path;
-    private double width;
-    private double height;
+    private String name;
 
-    public ImageManager(String imagePath){
-        path = imagePath;
-    }
-
-    public ImageManager(String imagePath, int width, int height){
-        setImagePath(imagePath);
+    public ImageManager(double width, double height, String imagePath){
+        super(width, height);
+        setImageName(imagePath);
         setWidth(width);
         setHeight(height);
     }
 
-    public void setImagePath(String imagePath){
-        File f = new File(path);
-        if(f.isFile()){
-            path = imagePath;
+    //TODO check other tests
+    public void setImageName(String imageName){
+        File f = null;
+        try {
+            f = new File("src/main/resources/" + imageName);
+        }catch (Exception e){
+            System.out.println("File not loaded");
+        }
+        if(f != null && f.isFile()){
+            name = imageName;
+            System.out.println("name ok");
         }else{
-            path = null;
+            name = null;
+            System.out.println("name null");
         }
     }
 
-    public boolean loadImage(){
-        if(path == null) return false;
-        if(width > 0 & height > 0){
-            image = new Image(path, width, height, false, false);
-        }else{
-            image = new Image(path);
+    @Override
+    public boolean load(){
+        if(isReadyToDraw()){
+            image = new Image(name, width, height, false, false);
         }
+        loaded = true;
         return true;
     }
 
-    public boolean loadImageWithSize(double width, double height){
+    @Override
+    public boolean isReadyToDraw() {
+        if(!super.isReadyToDraw()) return false;
+        if(name == null) return false;
+        if (!imageIsFound()) return false;
+        return true;
+    }
+
+    public boolean imageIsFound(){
+        File f = null;
+        try {
+            f = new File("src/main/resources/" + name);
+        }catch (Exception e){
+            return false;
+        }
+        if(f.isFile()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean loadWithSize(double width, double height){
         setWidth(width);
         setHeight(height);
-        return loadImage();
-    }
-
-    public void setHeight(double height){
-        if(height>0){
-            this.height = height;
-        }
-    }
-
-    public void setWidth(double width){
-        if(width > 0){
-            this.width = width;
-        }
+        return load();
     }
 
     public Image getImage() {
